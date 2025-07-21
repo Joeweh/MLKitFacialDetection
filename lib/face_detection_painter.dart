@@ -23,7 +23,7 @@ class FaceDetectionPainter extends CustomPainter {
 
   FaceDetectionPainter({super.repaint, required this.faces, required this.imageSize, required this.cameraLensDirection});
 
-  String _formatText({
+  String _formatFaceStatusText({
     required int faceNumber,
     required double smileProbability,
     required double leftEyeOpenProbability,
@@ -45,12 +45,24 @@ class FaceDetectionPainter extends CustomPainter {
       eyeState = 'Blinking';
     }
 
-    else if (leftEyeOpenProbability < 0.2) {
-      eyeState = 'Left Eye Closed';
+    if (cameraLensDirection == CameraLensDirection.front) {
+      if (leftEyeOpenProbability < 0.2) {
+        eyeState = 'Left Eye Closed';
+      }
+
+      else if (rightEyeOpenProbability < 0.2) {
+        eyeState = 'Right Eye Closed';
+      }
     }
 
-    else if (rightEyeOpenProbability < 0.2) {
-      eyeState = 'Right Eye Closed';
+    else {
+      if (rightEyeOpenProbability < 0.2) {
+        eyeState = 'Left Eye Closed';
+      }
+
+      else if (leftEyeOpenProbability < 0.2) {
+        eyeState = 'Right Eye Closed';
+      }
     }
 
     String text = 'Face $faceNumber\n$emotion';
@@ -110,7 +122,7 @@ class FaceDetectionPainter extends CustomPainter {
       drawFacialLandmark(FaceLandmarkType.bottomMouth);
 
       final TextSpan faceIdSpan = TextSpan(
-        text: _formatText(
+        text: _formatFaceStatusText(
           faceNumber: i + 1,
           smileProbability: face.smilingProbability ?? 0.5,
           leftEyeOpenProbability: face.leftEyeOpenProbability ?? 0.5,
