@@ -1,3 +1,3 @@
-# ml_kit_face_detection
+# MLKit Facial Detection
 
 Real-time facial detection using Google's MLKit
